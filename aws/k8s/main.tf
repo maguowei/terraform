@@ -9,7 +9,7 @@ resource "aws_lightsail_key_pair" "my_key_pair" {
 }
 
 resource "aws_lightsail_instance" "k8s" {
-  count = 4
+  count = 2
 
   name              = "k8s-${count.index}"
   availability_zone = "ap-northeast-1a"
@@ -20,4 +20,8 @@ resource "aws_lightsail_instance" "k8s" {
   tags = {
     app = "k8s"
   }
+}
+
+output "aws_lightsail_instance_ip_addrs" {
+  value = aws_lightsail_instance.k8s[*].public_ip_address
 }
