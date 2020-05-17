@@ -1,3 +1,8 @@
+variable "k8s_node_num" {
+  type    = number
+  default = 3
+}
+
 provider "aws" {
   version = "~> 2.0"
   region  = "ap-northeast-1"
@@ -9,8 +14,7 @@ resource "aws_lightsail_key_pair" "my_key_pair" {
 }
 
 resource "aws_lightsail_instance" "k8s" {
-  count = 2
-
+  count = var.k8s_node_num
   name              = "k8s-${count.index}"
   availability_zone = "ap-northeast-1a"
   blueprint_id      = "ubuntu_18_04"
