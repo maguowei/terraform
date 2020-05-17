@@ -14,7 +14,7 @@ resource "aws_lightsail_key_pair" "my_key_pair" {
 }
 
 resource "aws_lightsail_instance" "k8s" {
-  count = var.k8s_node_num
+  count             = var.k8s_node_num
   name              = "k8s-${count.index}"
   availability_zone = "ap-northeast-1a"
   blueprint_id      = "ubuntu_18_04"
@@ -28,5 +28,5 @@ resource "aws_lightsail_instance" "k8s" {
 
 output "aws_lightsail_instance_ip_addrs" {
   # value = aws_lightsail_instance.k8s[*].public_ip_address
-  value = {for k, k8s in aws_lightsail_instance.k8s[*] : k => k8s.public_ip_address}
+  value = { for k, k8s in aws_lightsail_instance.k8s[*] : k => k8s.public_ip_address }
 }
