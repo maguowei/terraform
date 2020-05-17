@@ -23,5 +23,6 @@ resource "aws_lightsail_instance" "k8s" {
 }
 
 output "aws_lightsail_instance_ip_addrs" {
-  value = aws_lightsail_instance.k8s[*].public_ip_address
+  # value = aws_lightsail_instance.k8s[*].public_ip_address
+  value = {for k, k8s in aws_lightsail_instance.k8s[*] : k => k8s.public_ip_address}
 }
