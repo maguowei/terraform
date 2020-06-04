@@ -14,7 +14,7 @@ resource "aws_lightsail_instance" "ubuntu" {
   blueprint_id      = "ubuntu_18_04"
   bundle_id         = "nano_2_0"
   key_pair_name     = "my_key_pair"
-  user_data         = "curl -fsSL https://get.docker.com/ | sh; sudo usermod -aG docker ubuntu"
+  user_data         = "curl -fsSL https://get.docker.com/ | sh; sudo usermod -aG docker ubuntu; docker run --name surge-snell -d --restart always -p 1984:1984 maguowei/surge-snell fuckgfw"
   tags = {
     app = "shell"
   }
