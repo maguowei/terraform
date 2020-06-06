@@ -37,22 +37,6 @@ sudo usermod -aG docker ubuntu
 docker run --name surge-snell -d --restart always -p 1984:1984 maguowei/surge-snell fuckgfw
 EOF
 
-#   provisioner "remote-exec" {
-#     connection {
-#       host        = coalesce(self.public_ip, self.private_ip)
-#       type        = "ssh"
-#       user        = "ubuntu"
-#       private_key = file("~/.ssh/id_rsa")
-#     }
-
-#     inline = [
-#       "curl -fsSL https://get.docker.com/ | sh",
-#       "sudo usermod -aG docker ubuntu",
-#       "docker run --name surge-snell -d --restart always -p 1984:1984 maguowei/surge-snell fuckgfw",
-#     ]
-#   }
-}
-
 output "aws_instance" {
   value = {
     public_ip : aws_instance.ubuntu.public_ip
