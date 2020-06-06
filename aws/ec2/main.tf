@@ -1,0 +1,42 @@
+provider "aws" {
+  region = "ap-east-1"
+}
+
+resource "aws_key_pair" "my_key_pair" {
+  key_name   = "my_key_pair"
+  public_key = file("~/.ssh/id_rsa.pub")
+}
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+  owners = ["099720109477"]
+}
+
+resource "aws_instance" "ubuntu" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.small"
+  key_name      = "my_key_pair"
+  tags = {
+    app = "ubuntu"
+  }
+}
+
+output "aws_instance_ip_addrs" {
+  value = {
+    public_ip : aws_instance.ubuntu.public_ip
+    public_dns : aws_instance.ubuntu.public_dns
+    private_ip : aws_instance.ubuntu.private_ip
+    private_dns : aws_instance.ubuntu.private_dns
+    instance_state : aws_instance.ubuntu.instance_state
+  }
+}
