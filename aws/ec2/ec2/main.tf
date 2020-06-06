@@ -1,3 +1,8 @@
+variable "ec2_node_num" {
+  type    = number
+  default = 3
+}
+
 provider "aws" {
   region = "ap-east-1"
 }
@@ -23,20 +28,27 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_instance" "ubuntu" {
+  count         = var.ec2_node_num
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.small"
-  key_name      = "my_key_pair"
+  key_name      = aws_key_pair.my_key_pair.id
   tags = {
     app = "ubuntu"
   }
 }
 
-output "aws_instance_ip_addrs" {
-  value = {
-    public_ip : aws_instance.ubuntu.public_ip
-    public_dns : aws_instance.ubuntu.public_dns
-    private_ip : aws_instance.ubuntu.private_ip
-    private_dns : aws_instance.ubuntu.private_dns
-    instance_state : aws_instance.ubuntu.instance_state
-  }
+output "aws_instance_public_ip" {
+  value = { for k, ubuntu in aws_instance.ubuntu[*] : k => ubuntu.public_ip }
+}
+output "aws_instance_public_dns" {
+  value = { for k, ubuntu in aws_instance.ubuntu[*] : k => ubuntu.public_dns }
+}
+output "aws_instance_private_ip" {
+  value = { for k, ubuntu in aws_instance.ubuntu[*] : k => ubuntu.private_ip }
+}
+output "aws_instance_private_dns" {
+  value = { for k, ubuntu in aws_instance.ubuntu[*] : k => ubuntu.private_dns }
+}
+output "aws_instance_instance_state" {
+  value = { for k, ubuntu in aws_instance.ubuntu[*] : k => ubuntu.instance_state }
 }
