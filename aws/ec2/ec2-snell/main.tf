@@ -36,6 +36,7 @@ curl -fsSL https://get.docker.com/ | sh
 sudo usermod -aG docker ubuntu
 docker run --name surge-snell -d --restart always -p 1984:1984 maguowei/surge-snell fuckgfw
 EOF
+}
 
 output "aws_instance" {
   value = {
