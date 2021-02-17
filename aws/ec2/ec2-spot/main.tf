@@ -27,10 +27,11 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-resource "aws_instance" "ubuntu" {
+resource "aws_spot_instance_request" "ubuntu" {
   count         = var.ec2_node_num
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.small"
+  spot_price    = "0.03"
+  instance_type = "t3.medium"
   key_name      = aws_key_pair.my_key_pair.id
   tags = {
     app = "ubuntu"
@@ -38,17 +39,17 @@ resource "aws_instance" "ubuntu" {
 }
 
 output "aws_instance_public_ip" {
-  value = { for k, ubuntu in aws_instance.ubuntu[*] : k => ubuntu.public_ip }
+  value = { for k, ubuntu in aws_spot_instance_request.ubuntu[*] : k => ubuntu.public_ip }
 }
 output "aws_instance_public_dns" {
-  value = { for k, ubuntu in aws_instance.ubuntu[*] : k => ubuntu.public_dns }
+  value = { for k, ubuntu in aws_spot_instance_request.ubuntu[*] : k => ubuntu.public_dns }
 }
 output "aws_instance_private_ip" {
-  value = { for k, ubuntu in aws_instance.ubuntu[*] : k => ubuntu.private_ip }
+  value = { for k, ubuntu in aws_spot_instance_request.ubuntu[*] : k => ubuntu.private_ip }
 }
 output "aws_instance_private_dns" {
-  value = { for k, ubuntu in aws_instance.ubuntu[*] : k => ubuntu.private_dns }
+  value = { for k, ubuntu in aws_spot_instance_request.ubuntu[*] : k => ubuntu.private_dns }
 }
 output "aws_instance_instance_state" {
-  value = { for k, ubuntu in aws_instance.ubuntu[*] : k => ubuntu.instance_state }
+  value = { for k, ubuntu in aws_spot_instance_request.ubuntu[*] : k => ubuntu.instance_state }
 }
